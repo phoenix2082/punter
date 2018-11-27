@@ -4,6 +4,7 @@ Demo project for using Clojure for Data Processing and Incanter for Charting.
 
 - [ ] - Don't be lazy
 - [ ] - Add detailed documenation
+- [ ] - Refactor wherever possible.
 
 
 ## Installation
