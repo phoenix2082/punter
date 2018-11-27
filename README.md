@@ -12,7 +12,17 @@ Download from http://example.com/FIXME.
 
 ## Usage
 
-FIXME: explanation
+First Method: 
+
+ 1. Clone the project
+ 2. cd in directory
+ 3. Execute following command:
+    
+    $ lein run
+
+Second Method:
+
+Not tried yet. So wait on this one.
 
     $ java -jar hello-bitly-0.1.0-standalone.jar [args]
 
