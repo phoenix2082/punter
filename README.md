@@ -6,11 +6,6 @@ Demo project for using Clojure for Data Processing and Incanter for Charting.
 - [ ] - Add detailed documenation
 - [ ] - Refactor wherever possible.
 
-
-## Installation
-
-Download from http://example.com/FIXME.
-
 ## Usage
 
 First Method: 
@@ -21,31 +16,5 @@ First Method:
     
     $ lein run
 
-Second Method:
+Copyright© 2018 phoenix2082
 
-Not tried yet. So wait on this one.
-
-    $ java -jar hello-bitly-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2018 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
