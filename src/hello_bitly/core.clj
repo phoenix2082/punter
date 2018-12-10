@@ -113,6 +113,25 @@
 (defn convert-keys-to-string [items]
   (map (fn [[k v]] [(name k) v]) items))
 
+(defn get-stacked-chart [xItem yItem gItem]
+  (stacked-bar-chart
+    xItem
+    yItem
+    :group-by gItem
+    :legend true
+    :vertical false
+    :y-label "Users (In %)"
+    :x-label "Timezones"))
+
+(defn transform-x [xItem]
+  (map #(subs (str %) 1) xItem))
+
+(defn transform-y [yItem]
+  (map #(* % 100 ) yItem))
+
+(defn transform-g [gItem]
+  (map #(name %) gItem))
+
 (defn draw-plot
   "Renders a Stacked Bar Chart.
   xItem - Vector of Item for X-Axis
@@ -120,14 +139,10 @@
   gItem - Vector of Item to group by"
   [xItem yItem gItem]
   (view
-   (stacked-bar-chart
-    xItem
-    yItem
-    :group-by gItem
-    :legend true
-    :vertical false
-    :y-label "Count"
-    :x-label "Timezones")))
+   (get-stacked-chart
+    (transform-x xItem)
+    (transform-y yItem)
+    (transform-g gItem))))
 
 (defn save-plot
   "Renders a Stacked Bar Chart.
@@ -136,15 +151,10 @@
   gItem - Vector of Item to group by"
   [xItem yItem gItem filename]
   (save
-   (stacked-bar-chart
-    xItem
-    yItem
-    :group-by gItem
-    :legend true
-    :vertical false
-    :y-label "Count"
-    :x-label "Timezones") filename))
-  
+   (get-stacked-chart
+    (transform-x xItem)
+    (transform-y yItem)
+    (transform-g gItem)) filename))
 
 (defn view-os-by-timezones []
   (draw-plot mytzmi valitems keyitems))
