@@ -1,36 +1,20 @@
-# hello-bitly
+# punter
 
-FIXME: description
+Demo project for using Clojure for Data Processing and Incanter for Charting.
 
-## Installation
-
-Download from http://example.com/FIXME.
+- [ ] - Don't be lazy
+- [ ] - Add detailed documenation
+- [ ] - Refactor wherever possible.
 
 ## Usage
 
-FIXME: explanation
+First Method: 
 
-    $ java -jar hello-bitly-0.1.0-standalone.jar [args]
+ 1. Clone the project
+ 2. cd in directory
+ 3. Execute following command:
+    
+    $ lein run
 
-## Options
+Copyright© 2018 phoenix2082
 
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2018 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
