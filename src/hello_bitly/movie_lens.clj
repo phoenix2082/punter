@@ -114,10 +114,11 @@
   (let [movie_id (keyword (:movie_id rec))
         rating (Integer/parseInt (:rating rec)) ]
   (if (contains? v movie_id)
-    (-> (vals (movie_id v))
-        ((fn [x] (if (contains? (vec x) :F)
-                   (update-in v [movie_id :F] conj rating)
-                   (update-in v [movie_id :M] conj rating)))))
+    ;;(-> (keys (movie_id v))
+    ;;    ((fn [x]
+    (if (= (:gender rec) "F")
+      (update-in v [movie_id :F] conj rating)
+      (update-in v [movie_id :M] conj rating))
     (->
      (if (= (:gender rec) "F")
       (assoc-in v [movie_id :F] [rating])
@@ -233,3 +234,13 @@
   "
   [rmeans mname]
   (clojure.pprint/print-table (filter #(= (:title %) mname) rmeans)))
+
+(defn get-means-with-atlease-n-ratings
+  "Gets the means for record where atlease n rating.
+   mmeans - Vector of all means
+   nratings - Integer. Total rating count greater than this number.
+
+   Output: New Vector of map of mean ratings filter by criteria.
+  "
+  [mmeans nrating]
+  (filter (fn [x] (> (+ (:mcount x) (:fcount x)) nrating)) mmeans))
