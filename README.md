@@ -2,7 +2,7 @@
 
 Demo project for using Clojure for Data Processing and Incanter for Charting.
 
-- [ ] - Don't be lazy
+- [ ] - Be less lazy.
 - [ ] - Add detailed documenation
 - [ ] - Refactor wherever possible.
 
@@ -14,7 +14,15 @@ First Method:
  2. cd in directory
  3. Execute following command:
     
-    $ lein run
+    $ lein repl
+ 
+ And wait for repl to show up.
+ 
+ Run followin command to view a normalized map of timetzone vs Windows vs Others OSes.
+ 
+ hello-bitly.core=> (view-os-by-timezones-normalized)
+ 
+ EASY WAY - Open project in Cider and read & FOLLOW the comments to view some work in action.
 
 Copyright© 2018 phoenix2082
 
