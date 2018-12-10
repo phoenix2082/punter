@@ -23,6 +23,10 @@ First Method:
  hello-bitly.core=> (view-os-by-timezones-normalized)
  
  EASY WAY - Open project in Cider and read & FOLLOW the comments to view some work in action.
+ 
+ ## Some Sample chart
+ 
+ ![alt "Data: Bitly Usage by Timezone for Windows vs Other Operating Systems"](https://github.com/phoenix2082/punter/blob/master/images/tzvsos.png) 
 
 Copyright© 2018 phoenix2082
 
