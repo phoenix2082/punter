@@ -1,16 +1,29 @@
 (ns hello-bitly.movie_lens
   (:gen-class)
   (:import (java.lang.Double)
-           (java.text.DecimalFormat))
+           (java.text.DecimalFormat)
+           (org.jfree.chart StandardChartTheme)
+           (org.jfree.chart.plot DefaultDrawingSupplier)
+           (java.awt Color))
   (:require [cheshire.core :refer :all]
             [clojure.walk]
             [clojure.pprint :as pp]
             [clojure.string :as cstr]
             [criterium.core :refer :all]))
 
+(use '(incanter core charts datasets))
+
 (def mlusers "ml-1m/users.dat")       ; path to movielens user data file
 (def mlratings "ml-1m/ratings.dat")   ; path to movielens user ratings data file.
 (def mlmovies  "ml-1m/movies.dat")    ; path to movielens movie data file. 
+
+(def df (new java.text.DecimalFormat "##.000000"))
+
+
+(defn round-6
+  "Round the value to two decimal places"
+  [num]
+  (Double/valueOf (.format df num)))
 
 (defn read-file
   "Read the file which has JSON text at each line.
@@ -144,16 +157,16 @@
         (into {} v)))))
 
 ;; Merge all records.
-;; (def all-records-merged (merge-user-movies-ratings allusers allrating allmovies))
+ (def all-records-merged (merge-user-movies-ratings allusers allrating allmovies))
 
 ;; get the subset, just for view.
 ;; (def subset-merged (sort-by :user_id (clojure.set/join (clojure.set/join susersmap sr200map) allmovies)))
 
 ;; Get all title, movie_id, rating and gender from all records merged.
-;; (def trmap (map (fn [x] (select-keys x [:movie_id :title :gender :rating])) all-records-merged))
+ (def trmap (map (fn [x] (select-keys x [:movie_id :title :gender :rating])) all-records-merged))
 
 ;; Convert to map of movieid and gender and rating group
-;; (def trmap-trg (pivot-title-gender-rating-map (vec trmap)))
+ (def trmap-trg (pivot-title-gender-rating-map (vec trmap)))
 
 ;; view 20 record from result
 ;; (subvec (vec trmap-trg) 0 20)
@@ -166,7 +179,7 @@
     Output:
       Arithmatic mean > e.x. (1 + 2 + 3 + 4)/ 4 = 2.5 
   "
-  (/ (reduce + avector) (double (count avector))))
+  (round-6 (/ (reduce + avector) (double (count avector)))))
 
 (defn calcualte-mean-by-gender-rating
   " Calculate the mean ratings for all movies.
@@ -177,12 +190,12 @@
          (let [mr (:M (second x)) fr (:F (second x))]
            { :title (:title (second x)),
             :mcount (count mr),
-            :mmean (calculate-mean mr),
+            :mmean (if-not (nil? mr) (calculate-mean mr) 0),
             :fcount (count fr),
-            :fmean (calculate-mean fr)})) grvector))
+            :fmean (if-not (nil? fr) (calculate-mean fr) 0)})) grvector))
 
 ;; calculate final means
-;; (def final-means (calcualte-mean-by-gender-rating (vec trmap-trg)))
+ (def final-means (calcualte-mean-by-gender-rating (vec trmap-trg)))
 
 ;; filter by movie title
 ;; (filter #(= (:title %) "12 Angry Men (1957)") final-means) 
@@ -244,3 +257,124 @@
   "
   [mmeans nrating]
   (filter (fn [x] (> (+ (:mcount x) (:fcount x)) nrating)) mmeans))
+
+
+(defn movies-with-gender-diff-250-ratings
+  [omeans nratings]
+  (as-> (get-means-with-atlease-n-ratings omeans nratings) omeansn
+      (map (fn [x] {:F (:fmean x),
+                    :M (:mmean x),
+                    :diff (- (:mmean x) (:fmean x)),
+                    :title (:title x)}) omeansn)))
+
+(defn square [x]
+  (* x x))
+
+(defn calculate-variance
+  [meanv rvec]
+  (/ (reduce + (vec (for [x rvec]
+                 (let [xi (- x meanv)]
+                   (* xi xi))))) (count rvec)))
+
+(defn square-root [x]
+  (Math/sqrt x))
+
+(defn standard-deviation
+  [ivector title]
+  (prn title)
+  (-> (calculate-mean ivector)
+      (calculate-variance ivector)
+      (square-root)
+      (round-6)))
+
+(defn get-total-ratings [rec]
+  (+ (count (:M rec)) (count (:F rec))))
+
+(defn filter-rating-by-count [rec minrating]
+  (> (get-total-ratings rec) minrating))
+
+(defn filter-all-record-by-rating-count [records minrating]
+  (filter #(filter-rating-by-count (second %) minrating) records))
+
+;(def testm21rec (map (fn [x] {:title (:title x),
+;                              :uratings (remove nil? (flatten (conj (:M x) (:F x))))}) (vals irecord)))
+   
+;;(def testm21sd (map (fn[x] {:title (:title x),
+;;                             :sds (standard-deviation (:uratings x) (:title x))}) testm21rec))
+
+;> (def testm21sdrs (reverse (sort-by :sds testm21sd)))
+
+;;(clojure.pprint/print-table (take 10 testm21sdrs))
+
+(defn get-movies-by-most-ratings
+  [records]
+  (-> (map (fn [[k m]] {:title (:title m),
+                        :totalratings (get-total-ratings m)}) records)
+      (vec)
+      (sort-by :totalratings)
+      (reverse)))
+  
+  
+;;(def moviebytotalcount (get-movies-by-most-ratings (vec trmap-trg)))
+;;(def mvbv (sort-by :totalratings moviebytotalcount))
+;;(def rmvbr (reverse mvbv))
+;; (def top10 (subvec (vec rmvbr) 0 10))
+;; (def xmitem (map #(:title %) top10))
+;; (def ymitem (map #(:totalratings %) top10))
+;; (def top10C2 (incanter.charts/bar-chart xmitem ymitem :title "Movies with Most Ratings" :y-label "Count" :x-label "Title" :legend true :vertical false))
+;; (incanter.core/view top10C2)
+
+(def all-cyan-theme
+      (doto
+        (StandardChartTheme/createJFreeTheme)
+        (.setDrawingSupplier
+        (proxy [DefaultDrawingSupplier] []
+          (getNextPaint [] Color/cyan)))))
+
+(defn sort-by-ratings [ivec]
+  (sort-by :totalratings ivec))
+
+(defn prepare-bar-chart [tmap]
+  (prn tmap)
+  (incanter.charts/bar-chart
+         (map #(:xitems %) tmap)
+         (map #(:yitems %) tmap)
+         :title "Movies with Most Ratings"
+         :y-label "Count"
+         :x-label "Title"
+         :legend false
+         :vertical false
+         :theme all-cyan-theme))
+
+(defn movies-with-most-ratings [records mcount]
+  (-> (get-movies-by-most-ratings (vec records))
+      (vec)
+      (sort-by-ratings)
+      (reverse)
+      (#(take mcount %))
+      (#(map (fn [x] {:xitems (:title x), :yitems (:totalratings x)}) %))))
+
+(defn view-movies-with-most-ratings
+   " Call this method to view top N movies to PNG images.
+    e.x. (view-movies-with-most-ratings records 10). Here:
+
+    records - Vector of map of movieid and gender and rating group.
+    mcount - number of movies you want to see in chart.
+  "
+  [records mcount]
+  (-> (movies-with-most-ratings records mcount)
+      (prepare-bar-chart)
+      (incanter.core/view)))
+
+(defn save-movies-with-most-ratings
+  " Call this method to save top 10 movies to PNG images.
+    e.x. (save-movies-with-most-ratings records 10). Here:
+
+    records - Vector of map of movieid and gender and rating group.
+    mcount - number of movies you want to see in chart.
+  "
+  [records mcount]
+  (-> (movies-with-most-ratings records mcount)
+      (prepare-bar-chart)
+      (incanter.core/save "topmovies.png")))
+      
