@@ -24,9 +24,14 @@ First Method:
  
  EASY WAY - Open project in Cider and read & FOLLOW the comments to view some work in action.
  
- ## Some Sample chart
+ ## Bitly Users Usage Analysis.
  
  ![alt "Data: Bitly Usage by Timezone for Windows vs Other Operating Systems"](https://github.com/phoenix2082/punter/blob/master/images/tzvsos.png) 
+
+## Movielens - Most rated movies.
+
+ ![alt "Data: Movieslens Movies Most Rated Movies"]
+(https://github.com/phoenix2082/punter/blob/master/images/top10.png) 
 
 Copyright© 2018 phoenix2082
 
