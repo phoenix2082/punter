@@ -30,8 +30,7 @@ First Method:
 
 ## Movielens - Most rated movies.
 
-![alt "Data: Movieslens Movies Most Rated Movies"]
-(https://github.com/phoenix2082/punter/blob/master/images/top10.png) 
+![alt "Data: Movieslens Movies Most Rated Movies"](https://github.com/phoenix2082/punter/blob/master/images/top10.png) 
 
 Copyright© 2018 phoenix2082
 
