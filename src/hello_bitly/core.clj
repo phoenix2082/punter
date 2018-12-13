@@ -6,7 +6,8 @@
             [clojure.walk]
             [clojure.string :as cstr]
             [hello-bitly.movie_lens :as mvl]
-            [clojure.math.numeric-tower :as math]))
+            [hello-bitly.baby_names :as usbn]
+            [Clojure.math.numeric-tower :as math]))
 
 (use '(incanter core charts datasets))
 
@@ -161,6 +162,7 @@
     
 (defn view-os-by-timezones-2 []
   (let [items (build-for-plot top-10)]
+    ;; arg1 - tz repeated, arg1 - values , arg2 - [Windows Others].....
     (draw-plot (get items 0) (get items 2) (get items 1))))
 
 (defn view-os-by-timezones-normalized []

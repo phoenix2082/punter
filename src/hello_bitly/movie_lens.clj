@@ -80,9 +80,9 @@
 (def names [["user_id" "gender" "age" "occupation" "zip"]])
 (def rnames [["user_id" "movie_id" "rating" "timestamp"]])
 (def mnames [["movie_id" "title" "genres"]])
-(def musers (read-table mlusers "::" names))
-(def ratings (read-table mlratings "::" rnames))
-(def movies (read-table  mlmovies "::" mnames))
+;;(def musers (read-table mlusers "::" names))
+;;(def ratings (read-table mlratings "::" rnames))
+;;(def movies (read-table  mlmovies "::" mnames))
 
 ; subset data for testing
 ;(def susers (subvec (vec mlusers) 0 10))
@@ -100,9 +100,9 @@
 ;; (def sm200 (subvec (vec movies) 0 10))
 
 ;; all movies map
-(def allmovies (convert-to-map (vec movies)))
-(def allrating (convert-to-map (vec ratings)))
-(def allusers (convert-to-map (vec musers)))
+;; (def allmovies (convert-to-map (vec movies)))
+;; (def allrating (convert-to-map (vec ratings)))
+;; (def allusers (convert-to-map (vec musers)))
 
 (defn merge-user-movies-ratings
   " Merges all movies, ratings and users into a single record."
@@ -157,16 +157,16 @@
         (into {} v)))))
 
 ;; Merge all records.
- (def all-records-merged (merge-user-movies-ratings allusers allrating allmovies))
+;; (def all-records-merged (merge-user-movies-ratings allusers allrating allmovies))
 
 ;; get the subset, just for view.
 ;; (def subset-merged (sort-by :user_id (clojure.set/join (clojure.set/join susersmap sr200map) allmovies)))
 
 ;; Get all title, movie_id, rating and gender from all records merged.
- (def trmap (map (fn [x] (select-keys x [:movie_id :title :gender :rating])) all-records-merged))
+;; (def trmap (map (fn [x] (select-keys x [:movie_id :title :gender :rating])) all-records-merged))
 
 ;; Convert to map of movieid and gender and rating group
- (def trmap-trg (pivot-title-gender-rating-map (vec trmap)))
+;; (def trmap-trg (pivot-title-gender-rating-map (vec trmap)))
 
 ;; view 20 record from result
 ;; (subvec (vec trmap-trg) 0 20)
@@ -195,7 +195,7 @@
             :fmean (if-not (nil? fr) (calculate-mean fr) 0)})) grvector))
 
 ;; calculate final means
- (def final-means (calcualte-mean-by-gender-rating (vec trmap-trg)))
+;; (def final-means (calcualte-mean-by-gender-rating (vec trmap-trg)))
 
 ;; filter by movie title
 ;; (filter #(= (:title %) "12 Angry Men (1957)") final-means) 
