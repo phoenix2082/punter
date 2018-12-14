@@ -36,7 +36,7 @@ First Method:
 
 ![alt "Data: United States Baby Names"](https://github.com/phoenix2082/punter/blob/master/images/birth-trends.png)
 
-** Number of children with name John, Harry & Marry since 1880 to 2017. Interestingly Harry was not very common name compared to John and Mary.**
+**Number of children with name John, Harry & Marry since 1880 to 2017. Interestingly Harry was not very common name compared to John and Mary.**
 
 ![alt "Data: People with name Harry, John & Mary"](https://github.com/phoenix2082/punter/blob/master/images/harry-john-mary.png)
 
