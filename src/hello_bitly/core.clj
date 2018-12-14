@@ -7,7 +7,7 @@
             [clojure.string :as cstr]
             [hello-bitly.movie_lens :as mvl]
             [hello-bitly.baby_names :as usbn]
-            [Clojure.math.numeric-tower :as math]))
+            [clojure.math.numeric-tower :as math]))
 
 (use '(incanter core charts datasets))
 

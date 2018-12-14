@@ -36,8 +36,8 @@
         (into names))))
 
 (defn read-directory 
-  "This method read all the files from a directory and returns list of files.
-
+  "This method read all the files from a directory and returns list
+  of files.
   arg - folderpath - the path of directory"
   [folderpath]
   (-> (new java.io.File folderpath)
@@ -81,9 +81,6 @@
 (defn all-year-records [dirpath]
   (let [filepaths (vec (read-directory dirpath))
         filecount (count filepaths)]
-    (prn (class filepaths))
-    (prn (count filepaths))
-    (prn (get filepaths 0))
     (loop [i 0 v ()]
       (if (< i filecount)
         (recur (inc i) (into v (get-yearly-records (get filepaths i))))
@@ -168,3 +165,40 @@
 (defn save-births-by-name
   [cnames filename]
   (incanter.core/save (chart-by-birth-name cnames) filename))
+
+;; Most Popular names in last 10 years 
+(defn most-popular-name []
+  (with-data
+    (->> (incanter.core/query-dataset namedata {:year {:$in (set (range 2008 2018 1))}})
+         (incanter.core/$rollup :sum :births [:year :name])
+         (incanter.core/$order [:year :name] :asc)
+         (#(incanter.core/sel % :rows (range 10))))
+    (incanter.charts/line-chart :year :births :group-by :name
+                                      :legend true
+                                      :y-label "Births"
+                                      :x-label "Year"
+                                      :title  "Trends")))
+
+(defn view-most-popular-name []
+   (incanter.core/view (most-popular-name)))
+
+;; (def f10data (incanter.core/query-dataset namedata {:year {:$in (set (range 2008 2018 1))}}))
+;; (def f10grouped (incanter.core/$rollup :sum :births [:year :name]) f10data)
+;; 
+;; (def f10sorted (incanter.core/$order [:year :name] :asc f10grouped))
+
+
+(defn check-and-update [resultmap year bname bncount]
+  (let [kbname (keyword bname)]
+   ;; (prn kyear)
+    (assoc-in resultmap [year kbname] bncount)))
+
+                   
+(defn process-record [cnames cyear ccount]
+  (let [totalrec (count cyear)]
+  (loop [i 0  v {}]
+    (if (< i totalrec)
+      (recur (inc i) (check-and-update v (get cyear i) (get cnames i) (get ccount i)))
+      v))))
+
+
