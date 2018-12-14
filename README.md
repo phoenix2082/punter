@@ -40,5 +40,3 @@ First Method:
 
 ![alt "Data: People with name Harry, John & Mary"](https://github.com/phoenix2082/punter/blob/master/images/harry-john-mary.png)
 
-Copyright© 2018 phoenix2082
-
