@@ -103,8 +103,8 @@
 (defn get-years []
   #{1880 1900 1920 1940 1960 1980 2000 2017})
 
-(def allrec (all-year-records babynamefilepath))
-(def namedata (incanter.core/dataset [:name :sex :births :year] allrec))
+(defonce allrec (all-year-records babynamefilepath))
+(defonce namedata (incanter.core/dataset [:name :sex :births :year] allrec))
 
 (defn view-test-chart-2 []
   (with-data
@@ -127,3 +127,44 @@
                                       :y-label "Count by Gender"
                                       :x-label "Year"
                                       :title  "Trends") "birth-trends.png")))
+
+;; Use this method to create chart object.
+;; Input : cnames > Vector of names.
+;; Output : returen a chart object.
+;; Used by view-births-by-name/save-births-by-name methods.
+(defn chart-by-birth-name [cnames]
+  (with-data
+    (->> (incanter.core/query-dataset namedata {:name {:$in (set cnames)}})
+         (incanter.core/$rollup :sum :births [:year :name])
+         (incanter.core/$order :year :asc))
+    (incanter.charts/line-chart :year :births :group-by :name
+                                      :legend true
+                                      :y-label "Births"
+                                      :x-label "Year"
+                                      :title  "Trends")))
+
+
+;; Use this to method to view child naming trends.
+;; Will create  a chart on desktop
+;;
+;; Input : cnames > Vector of names.
+;;         filename > Name of file in which result need to be saved.
+;;
+;; Example:
+;;   To view trends for a single name  > (view-births-by-name ["Harry"]) ;
+;;   To view trends for multiple names > (view-births-by-name ["Harry" "Mary"]) ;
+;;
+(defn view-births-by-name [cnames]
+   (incanter.core/view (chart-by-birth-name cnames)))
+
+
+;; Use this method to save child naming trends as png file.
+;;
+;; Input : cnames > Vector of names.
+;;         filename > Name of file in which result need to be saved.
+;;
+;; Example: (save-births-by-name ["Harry" "John"] "harry-john.png")
+;;
+(defn save-births-by-name
+  [cnames filename]
+  (incanter.core/save (chart-by-birth-name cnames) filename))
