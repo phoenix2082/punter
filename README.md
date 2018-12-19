@@ -93,3 +93,10 @@ Run following command to generate histogram PNG images for all columns in projec
 hello-bitly.us_housing=> (save-histograms housingdata (butlast headers))
 
 ```
+
+| First Header  | Second Header |
+| ------------- | ------------- |
+| ![alt "Houshold Histograms "](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Households.png)  |  ![alt "Housing Median Age"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Housing_median_age.png)  |
+| ![alt "Latitude Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Latitude.png)| ![alt "Longitude Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Longitude.png)|
+| ![alt "Median_house_value Histograms"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Median_house_value.png)  |  ![alt "Median_income Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Median_income.png)  |
+| ![alt "Population Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Population.png)| ![alt "Total Bedrooms Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Total_bedrooms.png)|
