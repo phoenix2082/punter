@@ -100,10 +100,11 @@
 (defn get-years []
   #{1880 1900 1920 1940 1960 1980 2000 2017})
 
-(defonce allrec (all-year-records babynamefilepath))
-(defonce namedata (incanter.core/dataset [:name :sex :births :year] allrec))
+;; Uncomment this to test 
+;;(defonce allrec (all-year-records babynamefilepath))
+;;(defonce namedata (incanter.core/dataset [:name :sex :births :year] allrec))
 
-(defn view-test-chart-2 []
+(defn view-test-chart-2 [namedata]
   (with-data
     (->> (incanter.core/query-dataset namedata {:year {:$in (get-years)}})
          (incanter.core/$rollup :sum :births [:year :sex])
@@ -114,7 +115,7 @@
                                       :x-label "Year"
                                       :title  "Trends"))))
 
-(defn save-test-chart-2 []
+(defn save-test-chart-2 [namedata]
   (with-data
     (->> (incanter.core/query-dataset namedata {:year {:$in (get-years)}})
          (incanter.core/$rollup :sum :births [:year :sex])
@@ -129,7 +130,7 @@
 ;; Input : cnames > Vector of names.
 ;; Output : returen a chart object.
 ;; Used by view-births-by-name/save-births-by-name methods.
-(defn chart-by-birth-name [cnames]
+(defn chart-by-birth-name [cnames namedata]
   (with-data
     (->> (incanter.core/query-dataset namedata {:name {:$in (set cnames)}})
          (incanter.core/$rollup :sum :births [:year :name])
@@ -151,7 +152,7 @@
 ;;   To view trends for a single name  > (view-births-by-name ["Harry"]) ;
 ;;   To view trends for multiple names > (view-births-by-name ["Harry" "Mary"]) ;
 ;;
-(defn view-births-by-name [cnames]
+(defn view-births-by-name [cnames namedata]
    (incanter.core/view (chart-by-birth-name cnames)))
 
 
@@ -163,11 +164,11 @@
 ;; Example: (save-births-by-name ["Harry" "John"] "harry-john.png")
 ;;
 (defn save-births-by-name
-  [cnames filename]
-  (incanter.core/save (chart-by-birth-name cnames) filename))
+  [cnames filename namedata]
+  (incanter.core/save (chart-by-birth-name cnames namedata) filename))
 
 ;; Most Popular names in last 10 years 
-(defn most-popular-name []
+(defn most-popular-name [namedata]
   (with-data
     (->> (incanter.core/query-dataset namedata {:year {:$in (set (range 2008 2018 1))}})
          (incanter.core/$rollup :sum :births [:year :name])

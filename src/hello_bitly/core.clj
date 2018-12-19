@@ -7,6 +7,7 @@
             [clojure.string :as cstr]
             [hello-bitly.movie_lens :as mvl]
             [hello-bitly.baby_names :as usbn]
+            [hello-bitly.us_housing :as ush]
             [clojure.math.numeric-tower :as math]))
 
 (use '(incanter core charts datasets))
@@ -35,7 +36,8 @@
 (defn get-json [items]
   (mapv convert-to-map items))
 
-(def my-records (get-json (read-file path)))
+;; Load record on startup                                        ;
+;;(def my-records (get-json (read-file path)))
 
 (defn check-and-update [rec v]
   (if (cstr/includes? (:a rec) "Windows")
@@ -66,13 +68,13 @@
   [prop items]
   (remove (fn [x] (clojure.string/blank? (prop x))) items))
 
-(def tz-clean (remove-nil-by-prop :tz my-records))
-(def tzoes (tz-os-map-2 (vec tz-clean)))
-(def tzoes-sorted-reversed (vec (reverse (tzs-os-map-2 tzoes))))
-(def top-10 (subvec tzoes-sorted-reversed 0 10))
-(def keyitems (flatten (map (fn [ii] (keys (second ii))) top-10)))
-(def valitems (flatten (map (fn [ii] (vals (second ii))) top-10)))
-(def mytzmi (flatten (map (fn [ii] [(first ii) (first ii)]) top-10)))
+;;(def tz-clean (remove-nil-by-prop :tz my-records))
+;;(def tzoes (tz-os-map-2 (vec tz-clean)))
+;;(def tzoes-sorted-reversed (vec (reverse (tzs-os-map-2 tzoes))))
+;;(def top-10 (subvec tzoes-sorted-reversed 0 10))
+;;(def keyitems (flatten (map (fn [ii] (keys (second ii))) top-10)))
+;;(def valitems (flatten (map (fn [ii] (vals (second ii))) top-10)))
+;;(def mytzmi (flatten (map (fn [ii] [(first ii) (first ii)]) top-10)))
 
 (defn build-for-plot
   [records]
@@ -95,7 +97,7 @@
      [(round-2 (/ (double (first x)) msum))
       (round-2 (/ (double (if-let [a (second x)] a 0)) msum))])))
 
-(def norma-val (normalized-vals top-10))
+;(def norma-val (normalized-vals top-10))
 
    
 (defn get-sum
@@ -157,18 +159,18 @@
     (transform-y yItem)
     (transform-g gItem)) filename))
 
-(defn view-os-by-timezones []
+(defn view-os-by-timezones [mytzmi valitems keyitems]
   (draw-plot mytzmi valitems keyitems))
     
-(defn view-os-by-timezones-2 []
+(defn view-os-by-timezones-2 [top-10]
   (let [items (build-for-plot top-10)]
     ;; arg1 - tz repeated, arg1 - values , arg2 - [Windows Others].....
     (draw-plot (get items 0) (get items 2) (get items 1))))
 
-(defn view-os-by-timezones-normalized []
+(defn view-os-by-timezones-normalized [mytzmi norma-val keyitems]
   (draw-plot mytzmi norma-val (conj (vec keyitems) :Others)))
 
-(defn save-os-by-timezones-normalized []
+(defn save-os-by-timezones-normalized [mytzmi norma-val keyitems]
   (save-plot mytzmi norma-val (conj (vec keyitems) :Others) "tzvsos.png"))
 
 (defn -main
