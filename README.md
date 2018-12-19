@@ -64,3 +64,32 @@ hello-bitly.us_housing=> (describe-nicely housingdatasets)
 |    min |         0.4999 |             0.0 |    -124.35 |         3.0 |                 1.0 |     32.54 |             14999.0 |          2.0 |         1.0 |
 
 ```
+
+To view histograms for various features, run `lein repl` from project root directory and wait for repl to start. Once you see this:
+
+```
+   Exit: Control+D or (exit) or (quit)
+ Results: Stored in vars *1, *2, *3, an exception in *e
+
+hello-bitly.core=>
+
+```
+
+Switch to us_housing namespace:
+
+```
+
+hello-bitly.core=> (in-ns 'hello-bitly.us_housing)
+#object[clojure.lang.Namespace 0x69dd4b48 "hello-bitly.us_housing"]
+
+hello-bitly.us_housing=>
+
+```
+
+Run following command to generate histogram PNG images for all columns in project root directory.
+
+```
+
+hello-bitly.us_housing=> (save-histograms housingdata (butlast headers))
+
+```

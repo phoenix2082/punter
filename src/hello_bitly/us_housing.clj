@@ -125,4 +125,56 @@
   "
   [hdataset]
   (clojure.pprint/print-table (describe-dataset hdataset)))
-       
+
+
+; TODO find better way to change color
+(defn set-custom-theme-colors
+  [chart]
+     (let [plot (.getPlot chart)
+           renderer (.getRenderer plot)]
+       (do
+          (doto plot
+           (.setBackgroundPaint java.awt.Color/white)
+           (.setRangeGridlinePaint (java.awt.Color. 235 235 235))
+           (.setDomainGridlinePaint (java.awt.Color. 235 235 235)))
+         (doto renderer
+           (.setOutlinePaint java.awt.Color/white)
+           (.setPaint (java.awt.Color. 153 230 255))) ; set histogram color to nice blue
+         chart)))
+
+
+
+(defn draw-histogram []
+  (doto (histogram :households :data housingdatasets :nbins 50 :x-label "Households" :y-label "Count")
+    (set-custom-theme-colors)
+    view))
+
+(defn create-histograms
+  "Use this method to generate histograms for all features,
+   which has numeric values.
+
+   e.x.  The last valeue in header is of string type exclude it.
+   hello-bitly.us_housing> (create-histograms housingdatasets (butlast headers))
+  "
+  [hdataset columnnames]
+  (for [v columnnames]
+    (let [xlabel (clojure.string/capitalize (name v))]
+      (doto (histogram v :data hdataset :nbins 50
+                       :x-label xlabel :y-label "Count")
+        (set-custom-theme-colors)
+        view))))
+
+(defn save-histograms
+  "Use this method to save histograms for all features,
+   which has numeric values.
+
+   e.x.  The last valeue in header is of string type exclude it.
+   hello-bitly.us_housing> (save-histograms housingdatasets (butlast headers))
+  "
+  [hdataset columnnames]
+  (for [v columnnames]
+    (let [xlabel (clojure.string/capitalize (name v))]
+      (doto (histogram v :data hdataset :nbins 50
+                       :x-label xlabel :y-label "Count")
+        (set-custom-theme-colors)
+        (save (str xlabel ".png"))))))
