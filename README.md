@@ -54,6 +54,7 @@ hello-bitly.us_housing=> (describe-nicely housingdatasets)
 "creating decimal formatter for 2"
 "creating decimal formatter for 6"
 
+```
 | :fname | :median_income | :total_bedrooms | :longitude | :population | :housing_median_age | :latitude | :median_house_value | :total_rooms | :households |
 |--------+----------------+-----------------+------------+-------------+---------------------+-----------+---------------------+--------------+-------------|
 |  count |          20640 |           20640 |      20640 |       20640 |               20640 |     20640 |               20640 |        20640 |       20640 |
@@ -61,3 +62,5 @@ hello-bitly.us_housing=> (describe-nicely housingdatasets)
 |     sd |       1.899776 |      422.668093 |   2.003483 | 1132.434688 |           12.585253 |  2.135901 |       115392.820404 |  2181.562402 |  382.320491 |
 |    max |        15.0001 |          6445.0 |    -114.31 |     35682.0 |                52.0 |     41.95 |            500001.0 |      39320.0 |      6082.0 |
 |    min |         0.4999 |             0.0 |    -124.35 |         3.0 |                 1.0 |     32.54 |             14999.0 |          2.0 |         1.0 |
+
+```
