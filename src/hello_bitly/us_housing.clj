@@ -139,7 +139,7 @@
            (.setDomainGridlinePaint (java.awt.Color. 235 235 235)))
          (doto renderer
            (.setOutlinePaint java.awt.Color/white)
-           (.setPaint (java.awt.Color. 153 230 255))) ; set histogram color to nice blue
+           (.setPaint (java.awt.Color. 204, 102, 0))) ; set histogram color to nice blue
          chart)))
 
 
@@ -178,3 +178,17 @@
                        :x-label xlabel :y-label "Count")
         (set-custom-theme-colors)
         (save (str xlabel ".png"))))))
+
+;;(def hcmap (incanter.core/to-map housingdatasets))
+;;(def dlongitude (:longitude hcmap))
+;;(def cal-plot (scatter-plot dlongitude dlatitude :x-label "Longitude" :y-label "Latitude" :title "California Data Distribution"))
+
+(defn create-scatter-plot
+  [housingdataset]
+  (let [hdataset (incanter.core/to-map housingdataset)
+        dlongitude (:longitude hdataset)
+        dlatitude  (:latitude hdataset)]
+      (doto (scatter-plot dlongitude dlatitude :x-label "Longitude" :y-label "Latitude" :title "California Data Distribution")
+        (set-custom-theme-colors)
+        (set-alpha 0.1)
+        view)))
