@@ -37,12 +37,11 @@ First Method:
 
 ## DataSource - US California Housing Prices Dataset
 
-| Some Trends  | Some More |
-| ------------- | ------------- |
-| ![alt "Houshold Histograms "](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Households.png)  |  ![alt "Housing Median Age"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Housing_median_age.png)  |
-| ![alt "Latitude Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Latitude.png)| ![alt "Longitude Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Longitude.png)|
-| ![alt "Median_house_value Histograms"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Median_house_value.png)  |  ![alt "Median_income Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Median_income.png)  |
-| ![alt "Population Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Population.png)| ![alt "Total Bedrooms Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Total_bedrooms.png)|
+| Some Trends   | Some More     | Some More     |
+| ------------- | ------------- | ------------- |
+| <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Households.png" align="left" height="230" width="230"/> |  <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Housing_median_age.png" align="left" height="230" width="230"/> | <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Latitude.png" align="left" height="230" width="230"/> |
+| <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Longitude.png" align="left" height="230" width="230"/> | <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Median_house_value.png" align="left" height="230" width="230"/> | <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Median_income.png" align="left" height="230" width="230"/>  |
+| <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Population.png" align="left" height="230" width="230"/>   |  <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Total_bedrooms.png" align="left" height="230" width="230"/>  | <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Total_rooms.png" align="left" height="230" width="230"/> |
 
 
 The dataset we have longitude and latitude information. It is always pleasure to have location based dataset as it allows us to draw map and do further analysis. So see the scatter plot below which tell about distribution of dataset.
