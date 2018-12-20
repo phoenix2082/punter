@@ -37,11 +37,18 @@ First Method:
 
 ## DataSource - US California Housing Prices Dataset
 
-
-
 | Some Trends  | Some More |
 | ------------- | ------------- |
 | ![alt "Houshold Histograms "](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Households.png)  |  ![alt "Housing Median Age"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Housing_median_age.png)  |
 | ![alt "Latitude Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Latitude.png)| ![alt "Longitude Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Longitude.png)|
 | ![alt "Median_house_value Histograms"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Median_house_value.png)  |  ![alt "Median_income Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Median_income.png)  |
 | ![alt "Population Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Population.png)| ![alt "Total Bedrooms Histogram"](https://github.com/phoenix2082/punter/blob/master/images/housing/histograms/Total_bedrooms.png)|
+
+
+The dataset we have longitude and latitude information. It is always pleasure to have location based dataset as it allows us to draw map and do further analysis. So see the scatter plot below which tell about distribution of dataset.
+
+| Actual Map | Data Distribution | Data Distribution with alpha 0.1 |
+| ---------- | ----------------- | -------------------------------- |
+| <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/locationmap/california-map.jpg" align="left" height="250" width="250"/>  | <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/locationmap/california-orange.png" align="left" height="250" width="250"/>  | <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/locationmap/california-orange-alpha-01.png" align="left" height="250" width="250"/>  |
+ 
+ If you compare first image with second one, you can see almost all of california is covered. However second image shows all datapoint from which it is difficult to understand where the high density area. In third image we create by setting alpha 0.1 which means draw low density area lightly. From this we can infer that high density area are around bay area, Sacramento, Fresno, Log Angeles and San Diego. This seems like a good deduction for further analysis.
