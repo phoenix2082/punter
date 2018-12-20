@@ -139,7 +139,7 @@
            (.setDomainGridlinePaint (java.awt.Color. 235 235 235)))
          (doto renderer
            (.setOutlinePaint java.awt.Color/white)
-           (.setPaint (java.awt.Color. 204, 102, 0))) ; set histogram color to nice blue
+           (.setPaint (java.awt.Color. 191 128 255)));; 77 255 166))) ; set histogram color to nice blue
          chart)))
 
 
@@ -184,11 +184,41 @@
 ;;(def cal-plot (scatter-plot dlongitude dlatitude :x-label "Longitude" :y-label "Latitude" :title "California Data Distribution"))
 
 (defn create-scatter-plot
-  [housingdataset]
+  "Use this method to create a scatter plot,
+  if you want to further process the plot before viewing or saving.
+
+  e.x.
+
+  hello-bitly.us_housing> (view-scatter-plot  housingdatasets :longitude :latitude \"Longitude\" \"Latitude\" \"California Housing Data Distribution\")
+
+  "
+  [housingdataset xprop yprop xlabel ylabel title]
   (let [hdataset (incanter.core/to-map housingdataset)
-        dlongitude (:longitude hdataset)
-        dlatitude  (:latitude hdataset)]
-      (doto (scatter-plot dlongitude dlatitude :x-label "Longitude" :y-label "Latitude" :title "California Data Distribution")
+        xdata (xprop hdataset)
+        ydata  (yprop hdataset)]
+      (doto (scatter-plot xdata ydata :x-label xlabel :y-label ylabel :title title)
         (set-custom-theme-colors)
-        (set-alpha 0.1)
-        view)))
+        ;(set-alpha 0.1)
+        )))
+
+(defn view-scatter-plot
+  "use this method to view scatter plot.
+
+  e.x.
+
+  hello-bitly.us_housing> (view-scatter-plot  housingdatasets :median_income :median_house_value \"Median Income\" \"Median House Value\" \"California Income vs House Value\")
+  
+  "
+  [housingdataset xprop yprop xlabel ylabel title]
+  (view (create-scatter-plot housingdataset xprop yprop xlabel ylabel title)))
+
+(defn save-scatter-plot
+  "use this method to save file to project root directory.
+
+  e.x.
+
+  hello-bitly.us_housing> (save-scatter-plot  housingdatasets :median_income :median_house_value \"Median Income\" \"Median House Value\" \"California Income vs House Value\" \"4.png\")
+  
+  "
+  [housingdataset xprop yprop xlabel ylabel title filename]
+  (save (create-scatter-plot housingdataset xprop yprop xlabel ylabel title) filename))
