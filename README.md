@@ -51,3 +51,22 @@ The dataset we have longitude and latitude information. It is always pleasure to
 | <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/locationmap/california-map.jpg" align="left" height="250" width="250"/>  | <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/locationmap/california-orange.png" align="left" height="250" width="250"/>  | <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/housing/locationmap/california-orange-alpha-01.png" align="left" height="250" width="250"/>  |
  
  If you compare first image with second one, you can see almost all of california is covered. However second image shows all datapoint from which it is difficult to understand where the high density area. In third image we create by setting alpha 0.1 which means draw low density area lightly. From this we can infer that high density area are around bay area, Sacramento, Fresno, Log Angeles and San Diego. This seems like a good deduction for further analysis.
+
+Alright next thing: **Median Income vs Median House Value Comparision**
+
+<table>
+  <tr>
+   <th> **Median Income vs Median House Value** </th>
+   <th> **Description** </th>
+  </tr>
+  <tr> 
+   <td width="50%" align="center"> 
+       <img src="https://github.com/phoenix2082/punter/blob/master/images/housing/median-income-vs-median-house-value.png" 
+            align="left" height="250" width="250"/> 
+   </td>
+   <td width="50%"> 
+    Well What is going on here ? First you can see there is a straight line around $500,000, because our dataset has upper cap on that value. You can also notice same for some other value. We need to get rid of those value from our dataset, otherwise we might get unexpected result during further analysis. 
+   </td>
+  </tr>
+ </table>
+ 
