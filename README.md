@@ -2,23 +2,24 @@
 
 Demo project for using Clojure for Data Processing and Incanter for Charting.
 
-- [ ] - Be less lazy.
-- [ ] - Add detailed documenation
-- [ ] - Refactor wherever possible.
-
 ## Usage
 
-First Method: 
 
- 1. Clone the project
- 2. cd in directory
+ 1. Clone the project - 
+     
+     $ git clone https://github.com/phoenix2082/punter.git
+ 
+ 2. cd in directory - 
+    
+     $ cd punter
+ 
  3. Execute following command:
     
     $ lein repl
  
  And wait for repl to show up.
  
- Run followin command to view a normalized map of timetzone vs Windows vs Others OSes.
+ Run following command to view a normalized map of timetzone vs Windows vs Others OSes.
  
  hello-bitly.core=> (view-os-by-timezones-normalized)
  
