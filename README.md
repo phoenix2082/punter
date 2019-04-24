@@ -13,16 +13,19 @@ Demo project for using Clojure for Data Processing and Incanter for Charting.
     
      $ cd punter
  
- 3. Execute following command:
+ 3. Execute following command to launch as web application:
     
-    $ lein repl
+    $ lein fig -- -b dev -r
  
- And wait for repl to show up.
+ It will automatically launch default browser and will open following URL: http://localhost:9500. 
+ 
+ ## Below command still works
  
  Run following command to view a normalized map of timetzone vs Windows vs Others OSes.
  
  hello-bitly.core=> (view-os-by-timezones-normalized)
  
+## Analysis Result
 
 | **Bitly Users Usage Analysis.** | **Movielens - Most rated movies.** |
 | ------------------------------ | --------------------------------  |
