@@ -1,0 +1,3 @@
+{
+ :ring-handler hello-bitly.core/handler
+}

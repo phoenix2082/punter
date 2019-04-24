@@ -5,6 +5,8 @@
            (org.jfree.chart StandardChartTheme)
            (org.jfree.chart.plot DefaultDrawingSupplier)
            (java.awt Color)
+           (java.io ByteArrayOutputStream 
+                    ByteArrayInputStream)
            (java.nio.file.Files))
   (:require [clojure.walk]
             [clojure.pprint :as pp]
@@ -143,6 +145,17 @@
          chart)))
 
 
+(defn all-feature-histogram []
+  (let [columnnames (butlast headers)
+        hdatasets housingdatasets]
+    (for [v columnnames]
+          (let [xlabel (clojure.string/capitalize (name v))]
+            (doto (histogram v :data hdatasets :nbins 50
+                             :x-label xlabel :y-label "Count")
+              set-custom-theme-colors)))))
+              
+;;  (doto (histogram :households :data housingdatasets :nbins 50 :x-label "Households" :y-label "Count")
+;;    (set-custom-theme-colors)))
 
 (defn draw-histogram []
   (doto (histogram :households :data housingdatasets :nbins 50 :x-label "Households" :y-label "Count")
@@ -222,3 +235,12 @@
   "
   [housingdataset xprop yprop xlabel ylabel title filename]
   (save (create-scatter-plot housingdataset xprop yprop xlabel ylabel title) filename))
+
+(defn get-feature-histogram []
+  (let [mlchart (first (all-feature-histogram))
+        out-stream (ByteArrayOutputStream.)
+        in-stream (do
+                    (save mlchart out-stream)
+                    (ByteArrayInputStream.
+                     (.toByteArray out-stream)))]
+    in-stream))

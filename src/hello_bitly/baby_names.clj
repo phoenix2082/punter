@@ -5,6 +5,8 @@
            (org.jfree.chart StandardChartTheme)
            (org.jfree.chart.plot DefaultDrawingSupplier)
            (java.awt Color)
+           (java.io ByteArrayOutputStream 
+                    ByteArrayInputStream)
            (java.nio.file.Files))
   (:require [clojure.walk]
             [clojure.pprint :as pp]
@@ -101,9 +103,20 @@
   #{1880 1900 1920 1940 1960 1980 2000 2017})
 
 ;; Uncomment this to test 
-;;(defonce allrec (all-year-records babynamefilepath))
-;;(defonce namedata (incanter.core/dataset [:name :sex :births :year] allrec))
+(defonce allrec (all-year-records babynamefilepath))
+(defonce namedata (incanter.core/dataset [:name :sex :births :year] allrec))
 
+(defn get-line-chart [namedata]
+  (with-data
+    (->> (incanter.core/query-dataset namedata {:year {:$in (get-years)}})
+         (incanter.core/$rollup :sum :births [:year :sex])
+         (incanter.core/$order :year :asc))
+    (incanter.charts/line-chart :year :births :group-by :sex
+                                      :legend true
+                                      :y-label "Births"
+                                      :x-label "Year"
+                                      :title  "Trends")))
+  
 (defn view-test-chart-2 [namedata]
   (with-data
     (->> (incanter.core/query-dataset namedata {:year {:$in (get-years)}})
@@ -202,4 +215,13 @@
       (recur (inc i) (check-and-update v (get cyear i) (get cnames i) (get ccount i)))
       v))))
 
+
+(defn get-gender-trends []
+  (let [mlchart (get-line-chart namedata)
+        out-stream (ByteArrayOutputStream.)
+        in-stream (do
+                    (save mlchart out-stream)
+                    (ByteArrayInputStream.
+                     (.toByteArray out-stream)))]
+    in-stream))
 

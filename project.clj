@@ -9,10 +9,28 @@
                  [cheshire "5.8.1"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [criterium "0.4.4"]
-                 [org.clojure/tools.trace "0.7.10"]]
+                 [org.clojure/tools.trace "0.7.10"]
+                 [aleph "0.4.6"]
+                 [ring/ring-core "1.6.3"]
+                 [ring/ring-jetty-adapter "1.6.3"]
+                 [ring/ring-devel "1.6.3"]
+                 [compojure "1.6.1"]]
+
+  :plugins [[lein-ring "0.12.1"]]
+
+  :profiles {:uberjar {:aot :all}
+             :dev     {:resource-paths ["target"]
+                       :clean-targets ^{:protect false} ["target"]
+                       :dependencies [[org.clojure/clojurescript "1.10.339"]
+                                      [com.bhauman/figwheel-main "0.2.0"]
+                                      ;; optional but recommended
+                                      [com.bhauman/rebel-readline-cljs "0.1.4"]]}
+             }
+
+  :aliases {"fig" ["trampoline" "run" "-m" "figwheel.main"]}
   
   :main ^:skip-aot hello-bitly.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}}
-  :java-cmd "/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/bin/java"
+
+  
   :jvm-opts ["-Xmx2g"])

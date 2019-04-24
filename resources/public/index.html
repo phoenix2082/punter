@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Clojure Analytics</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script> 
+    <!--link href="css/style.css" rel="stylesheet" type="text/css"-->
+    <link rel="icon" href="https://clojurescript.org/images/cljs-logo-icon-32.png">
+  </head>
+  <body>
+    <div id="app">
+      <div class="tabs">
+      <ul>
+	<li class="is-active" onclick="loadEntity(this, 'bitly')"><a>Bitly</a></li>
+	<li onclick="loadEntity(this, 'movielens')"><a>MovieLens</a></li>
+	<li onclick="loadEntity(this, 'usbnames')"><a>US Baby Names</a></li>
+	<li onclick="loadEntity(this, 'uscalhousing')"><a>US California Housing Prices</a></li>
+      </ul>
+    </div>
+    <div class="container" id="demo">
+    </div>
+    </div>
+     <script type="text/javascript">
+
+       function loadDoc(url) {
+	  var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+		  window.URL = window.URL || window.webkitURL; 
+		  var blob = new Blob([this.response], {type: 'image/png'});
+		  var elem = document.createElement("img");
+		  elem.src = window.URL.createObjectURL(blob);
+		  document.getElementById("demo").innerHTML = "";
+		  document.getElementById("demo").appendChild(elem);
+	      }
+	  };
+	  xhttp.open("GET", url, true);
+	  xhttp.responseType = 'blob';
+	  xhttp.send(); 
+      }
+
+       
+      window.onload = function() {
+	  loadDoc("bitly");
+      }
+
+      function loadEntity(el, url) {
+	  //alert(el.innerHTML);
+	  el.setAttribute("class", "is-active");
+	  loadDoc(url);
+      }
+    </script>
+    <script src="cljs-out/dev-main.js"></script>
+  </body>
+</html>
