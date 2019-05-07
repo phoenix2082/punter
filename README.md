@@ -2,6 +2,15 @@
 
 Demo project for using Clojure for Data Processing and Incanter for Charting.
 
+
+## Web Application Preview - 
+
+Shwoing Housing Tab. Switch Tab to view different dataset.
+
+| ** Housing Tab ** |
+| ------------------------------ | 
+|  <a href="url"><img src="https://github.com/phoenix2082/punter/blob/master/images/WebPreview.png" align="left" height="384" width="512" alt= "Data: Bitly Usage by Timezone for Windows vs Other Operating Systems"/> | 
+ 
 ## Usage
 
 
