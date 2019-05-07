@@ -10,7 +10,8 @@
   (:require [cheshire.core :refer :all]
             [clojure.walk]
             [clojure.string :as cstr]
-            [clojure.math.numeric-tower :as math]))
+            [clojure.math.numeric-tower :as math]
+            [hello-bitly.util :as hbu]))
 
 (use '(incanter core charts datasets))
 
@@ -18,17 +19,6 @@
 
 (def df (new java.text.DecimalFormat "##.00"))
 
-(defn round-2
-  "Round the value to two decimal places"
-  [num]
-  (Double/valueOf (.format df num)))
-
-(defn read-file
-  "Read the file which has JSON text at each line.
-  Return lines as collection."
-  [path]
-  (with-open [rdr (clojure.java.io/reader path)]
-    (reduce conj [] (line-seq rdr))))
 
 (defn convert-to-map
   "Parse each record and convert to JSON"
@@ -39,7 +29,7 @@
   (mapv convert-to-map items))
 
 ;; Load record on startup                                        ;
-(def my-records (get-json (read-file path)))
+(def my-records (get-json (hbu/read-file path)))
 
 (defn check-and-update [rec v]
   (if (cstr/includes? (:a rec) "Windows")
@@ -96,8 +86,8 @@
   (flatten
    (for [x (map (fn [ii] (vals (second ii))) items)
          :let [msum (sum x)]]
-     [(round-2 (/ (double (first x)) msum))
-      (round-2 (/ (double (if-let [a (second x)] a 0)) msum))])))
+     [(hbu/round-n (/ (double (first x)) msum) 2)
+      (hbu/round-n (/ (double (if-let [a (second x)] a 0)) msum) 2)])))
 
 (def norma-val (normalized-vals top-10))
 

@@ -4,12 +4,15 @@
            (java.text.DecimalFormat)
            (org.jfree.chart StandardChartTheme)
            (org.jfree.chart.plot DefaultDrawingSupplier)
-           (java.awt Color))
+           (java.awt Color)
+           (java.io ByteArrayOutputStream 
+                    ByteArrayInputStream))
   (:require [cheshire.core :refer :all]
             [clojure.walk]
             [clojure.pprint :as pp]
             [clojure.string :as cstr]
-            [criterium.core :refer :all]))
+            [criterium.core :refer :all]
+            [hello-bitly.util :as hbu]))
 
 (use '(incanter core charts datasets))
 
@@ -25,16 +28,9 @@
   [num]
   (Double/valueOf (.format df num)))
 
-(defn read-file
-  "Read the file which has JSON text at each line.
-  Return lines as collection."
-  [path]
-  (with-open [rdr (clojure.java.io/reader path)]
-    (reduce conj [] (line-seq rdr))))
-
 (defn read-table [path seperator names]
-  (as-> (read-file path) records
-    (-> (map (fn [rec] (cstr/split rec (re-pattern seperator))) records)
+  (as-> (hbu/read-file path) records
+    (-> (pmap (fn [rec] (cstr/split rec (re-pattern seperator))) records)
         (into names))))
 
 (defn print-nice
@@ -56,7 +52,11 @@
         (pp/print-table)))
 
 (defn convert-to-map [record]
-  (pmap (fn [x] (zipmap (map keyword (first record)) x)) (rest record)))
+  (pmap (fn [x] (zipmap (pmap keyword (first record)) x)) (rest record)))
+
+(defn new-convert [headers movie]
+  (let [mmovie (zipmap (map keyword headers) movie)]
+    (assoc-in {} (keyword (:movie_id mmovie)) mmovie)))
 
 (defn view-table-data 
   "Print data in nice tabular format.
@@ -100,9 +100,9 @@
 ;; (def sm200 (subvec (vec movies) 0 10))
 
 ;; all movies map
-;; (def allmovies (convert-to-map (vec movies)))
-;; (def allrating (convert-to-map (vec ratings)))
-;; (def allusers (convert-to-map (vec musers)))
+;;(def allmovies (convert-to-map (vec movies)))
+;;(def allrating (convert-to-map (vec ratings)))
+;;(def allusers (convert-to-map (vec musers)))
 
 (defn merge-user-movies-ratings
   " Merges all movies, ratings and users into a single record."
@@ -115,7 +115,7 @@
    INPUT: Individual movie record.
     rec - {:movie_id 1234, :rating 3, :gender M, :title \"12 Angry Men\"}
 
-   Output: A continuosly update map.
+   Output: A continuosly updated map.
    e.x.
      [
      {:1234 {:title \"12 Angry Men\",
@@ -137,7 +137,36 @@
       (assoc-in v [movie_id :F] [rating])
       (assoc-in v [movie_id :M] [rating]))
      (assoc-in [movie_id :title] (:title rec))))))
-      
+
+(defn check-and-update-ratings
+  "Process an individual record and add to map, almost like a pivot.
+
+   INPUT: Individual movie record.
+    rec - {:movie_id 1234, :rating 3, :gender M, :title \"12 Angry Men\"}
+
+   Output: A continuosly updated map.
+   e.x.
+     [
+     {:1234 {:title \"12 Angry Men\",
+             :F [2 4 5 3]              ; Ratings by all female users
+             :M [1 3 4 5]}}            ; Ratings by all male users
+     .....]
+  "
+  [rec v]
+  (let [movie_id (keyword (:movie_id rec))
+        rating (Integer/parseInt (:rating rec)) ]
+  (if (contains? v movie_id)
+    ;;(-> (keys (movie_id v))
+    ;;    ((fn [x]
+    (if (= (:gender rec) "F")
+      (update-in v [movie_id :F] conj rating)
+      (update-in v [movie_id :M] conj rating))
+    (->
+     (if (= (:gender rec) "F")
+      (assoc-in v [movie_id :F] [rating])
+      (assoc-in v [movie_id :M] [rating]))
+     (assoc-in [movie_id :title] (:title rec))))))
+
 (defn pivot-title-gender-rating-map
   " Create a almost pivot table like map of all ratings for all movies by gender.
 
@@ -157,19 +186,37 @@
         (into {} v)))))
 
 ;; Merge all records.
-;; (def all-records-merged (merge-user-movies-ratings allusers allrating allmovies))
+;;(def all-records-merged (merge-user-movies-ratings allusers allrating allmovies))
 
 ;; get the subset, just for view.
 ;; (def subset-merged (sort-by :user_id (clojure.set/join (clojure.set/join susersmap sr200map) allmovies)))
 
 ;; Get all title, movie_id, rating and gender from all records merged.
-;; (def trmap (map (fn [x] (select-keys x [:movie_id :title :gender :rating])) all-records-merged))
+;;(def trmap (map (fn [x] (select-keys x [:movie_id :title :gender :rating])) all-records-merged))
 
 ;; Convert to map of movieid and gender and rating group
-;; (def trmap-trg (pivot-title-gender-rating-map (vec trmap)))
+;;(def trmap-trg (pivot-title-gender-rating-map (vec trmap)))
 
 ;; view 20 record from result
 ;; (subvec (vec trmap-trg) 0 20)
+;; (def musers (read-table mlusers "::" names))
+;; (def ratings (read-table mlratings "::" rnames))
+;; (def movies (read-table  mlmovies "::" mnames))
+;; (def allmovies (convert-to-map (vec movies)))
+;; (def allrating (convert-to-map (vec ratings)))
+;; (def allusers (convert-to-map (vec musers)))
+
+(defn get-trmap-trg []
+  (let [movies (read-table  mlmovies "::" mnames)
+        ratings (read-table mlratings "::" rnames)
+        musers (read-table mlusers "::" names)
+        allmovies (convert-to-map movies)
+        allrating (convert-to-map ratings)
+        allusers (convert-to-map musers)
+        all-records-merged (merge-user-movies-ratings allusers allrating allmovies)
+        trmap (pmap (fn [x] (select-keys x [:movie_id :title :gender :rating])) all-records-merged)
+        trmap-trg (pivot-title-gender-rating-map trmap)]
+    trmap-trg))
 
 (defn calculate-mean [avector]
   " Calculate arithmatic mean of all the values in vector.
@@ -308,10 +355,10 @@
 
 (defn get-movies-by-most-ratings
   [records]
-  (-> (map (fn [[k m]] {:title (:title m),
+  (-> (pmap (fn [[k m]] {:title (:title m),
                         :totalratings (get-total-ratings m)}) records)
       (vec)
-      (sort-by :totalratings)
+      (#(sort-by :totalratings %))
       (reverse)))
   
   
@@ -352,7 +399,7 @@
       (sort-by-ratings)
       (reverse)
       (#(take mcount %))
-      (#(map (fn [x] {:xitems (:title x), :yitems (:totalratings x)}) %))))
+      (#(pmap (fn [x] {:xitems (:title x), :yitems (:totalratings x)}) %))))
 
 (defn view-movies-with-most-ratings
    " Call this method to view top N movies to PNG images.
@@ -378,3 +425,50 @@
       (prepare-bar-chart)
       (incanter.core/save "topmovies.png")))
       
+
+(defn get-naming-trends []
+  (let [mvdata (movies-with-most-ratings (get-trmap-trg)  10)
+        mlchart (prepare-bar-chart mvdata)
+        out-stream (ByteArrayOutputStream.)
+        in-stream (do
+                    (save mlchart out-stream)
+                    (ByteArrayInputStream.
+                     (.toByteArray out-stream)))]
+    in-stream))
+
+(defn user-gender-map [userlist]
+  (into {} (map (fn [x] (assoc {} (keyword (:user_id x)) (:gender x))) userlist)))
+
+(defn count-rating-by-gender
+  [ratinglist ugenmap]
+  (frequencies
+   (for [x ratinglist]
+     ((keyword (:user_id x)) ugenmap))))
+
+(defn movies-by-rating-count
+  [moviesratings]
+  (into {}
+        (for [x moviesratings]
+          (assoc {} (first (keys x)) (count (first (vals x)))))))
+
+(defn movie-names [movielist]
+  (into {}
+        (map (fn [x] [(keyword (:movie_id x)) (:title x)]) movielist)))
+
+(defn sort-map-by-vals [umap]
+  (into (sorted-map-by (fn [key1 key2]
+                         (compare [(get umap key2) key2]
+                                  [(get umap key1) key1])))
+        umap))
+
+(defn most-rated-movies [rating-map movie-map]
+  (for [mkey (keys rating-map)]
+    (assoc {} (mkey movie-map) (mkey rating-map))))
+
+(defn get-results []
+  (let [movies (read-table  mlmovies "::" mnames)
+        ratings (read-table mlratings "::" rnames)
+        musers (read-table mlusers "::" names)
+        allmovies (convert-to-map movies)
+        allrating (convert-to-map ratings)
+        allusers (convert-to-map musers)]))

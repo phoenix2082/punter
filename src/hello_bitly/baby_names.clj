@@ -11,7 +11,8 @@
   (:require [clojure.walk]
             [clojure.pprint :as pp]
             [clojure.string :as cstr]
-            [criterium.core :refer :all]))
+            [criterium.core :refer :all]
+            [hello-bitly.util :as hbu]))
 
 (use '(incanter core charts datasets))
 
@@ -24,16 +25,8 @@
 (defn file-abs-path [filelist]
   (map #(.getAbsolutePath %) filelist))
 
-(defn read-file
-  "Read the file which has JSON text at each line.
-  Return lines as collection."
-  [path]
-  ;(prn "readingfile")
-  (with-open [rdr (clojure.java.io/reader path)]
-    (reduce conj [] (line-seq rdr))))
-
 (defn read-table [path seperator names]
-  (as-> (read-file path) records
+  (as-> (hbu/read-file path) records
     (-> (map (fn [rec] (cstr/split rec (re-pattern seperator))) records)
         (into names))))
 
@@ -70,7 +63,7 @@
       (Integer/parseInt)))
 
 (defn get-yearly-records [filepath]
-  (-> (read-file filepath)
+  (-> (hbu/read-file filepath)
       (read-records ",")
       (prep-records)
       (add-extra-value (get-year-from-filename filepath))))
