@@ -125,7 +125,8 @@
   "
   [rec v]
   (let [movie_id (keyword (:movie_id rec))
-        rating (Integer/parseInt (:rating rec)) ]
+        ratingval (:rating rec)
+        rating (Integer/parseInt (if-let [rv ratingval] rv 0)) ]
   (if (contains? v movie_id)
     ;;(-> (keys (movie_id v))
     ;;    ((fn [x]
@@ -206,6 +207,7 @@
 ;; (def allrating (convert-to-map (vec ratings)))
 ;; (def allusers (convert-to-map (vec musers)))
 
+
 (defn get-trmap-trg []
   (let [movies (read-table  mlmovies "::" mnames)
         ratings (read-table mlratings "::" rnames)
@@ -215,18 +217,8 @@
         allusers (convert-to-map musers)
         all-records-merged (merge-user-movies-ratings allusers allrating allmovies)
         trmap (pmap (fn [x] (select-keys x [:movie_id :title :gender :rating])) all-records-merged)
-        trmap-trg (pivot-title-gender-rating-map trmap)]
+        trmap-trg (pivot-title-gender-rating-map (vec trmap))]
     trmap-trg))
-
-(defn calculate-mean [avector]
-  " Calculate arithmatic mean of all the values in vector.
-    Input: 
-      avector: vector of numebrs e.x. [1 2 3 4]
-
-    Output:
-      Arithmatic mean > e.x. (1 + 2 + 3 + 4)/ 4 = 2.5 
-  "
-  (round-6 (/ (reduce + avector) (double (count avector)))))
 
 (defn calcualte-mean-by-gender-rating
   " Calculate the mean ratings for all movies.
@@ -237,9 +229,9 @@
          (let [mr (:M (second x)) fr (:F (second x))]
            { :title (:title (second x)),
             :mcount (count mr),
-            :mmean (if-not (nil? mr) (calculate-mean mr) 0),
+            :mmean (if-not (nil? mr) (hbu/calculate-mean mr) 0),
             :fcount (count fr),
-            :fmean (if-not (nil? fr) (calculate-mean fr) 0)})) grvector))
+            :fmean (if-not (nil? fr) (hbu/calculate-mean fr) 0)})) grvector))
 
 ;; calculate final means
 ;; (def final-means (calcualte-mean-by-gender-rating (vec trmap-trg)))
@@ -316,23 +308,6 @@
 
 (defn square [x]
   (* x x))
-
-(defn calculate-variance
-  [meanv rvec]
-  (/ (reduce + (vec (for [x rvec]
-                 (let [xi (- x meanv)]
-                   (* xi xi))))) (count rvec)))
-
-(defn square-root [x]
-  (Math/sqrt x))
-
-(defn standard-deviation
-  [ivector title]
-  (prn title)
-  (-> (calculate-mean ivector)
-      (calculate-variance ivector)
-      (square-root)
-      (round-6)))
 
 (defn get-total-ratings [rec]
   (+ (count (:M rec)) (count (:F rec))))
