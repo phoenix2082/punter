@@ -2,6 +2,9 @@
 
 Demo project for using Clojure for Data Processing and Incanter for Charting.
 
+# Check Wiki here for nice looking graphs
+
+https://github.com/phoenix2082/punter/wiki
 
 ## Web Application Preview - 
 
